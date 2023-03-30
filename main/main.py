@@ -1,6 +1,7 @@
 import cv2
 import streamlit as st
 import time
+import os
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
@@ -16,10 +17,13 @@ def detect_person():
             # Generate a timestamp name for the image
             timestamp = int(time.time())
             image_name = f'person_detected_{timestamp}.jpg'
-            # Save the frame as an image with the timestamp name
-            cv2.imwrite(image_name, frame)
+            # Check if the 'pic' folder exists, and create it if not
+            if not os.path.exists('pic'):
+                os.makedirs('pic')
+            # Save the frame as an image in the 'pic' folder with the timestamp name
+            cv2.imwrite('pic/' + image_name, frame)
             # Display a success message
-            st.success(f"Person detected and image saved as {image_name}!")
+            st.success(f"Person detected and image saved as {image_name} in 'pic' folder!")
         cv2.imshow('frame', frame)
         # Wait for the 'q' key to be pressed to quit
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -34,3 +38,4 @@ st.write("Press the button below to start detecting people with your webcam.")
 
 if st.button("Detect Person"):
     detect_person()
+
